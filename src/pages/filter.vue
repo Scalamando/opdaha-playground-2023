@@ -1,10 +1,12 @@
 <script>
+
 export default {
+
 	data() {
 		return {
 			distanceValue: [0],
 			ageValue: [0, 5],
-		
+
 			ratingOptions: [
 				{ label: "Alle", value: "Alle" },
 				{ label: "3", value: "3 Sterne", iconRight: "star" },
@@ -129,5 +131,6 @@ export default {
 		</div>
 
 		<va-divider />
+
 	</div>
 </template>
