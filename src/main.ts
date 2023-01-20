@@ -12,6 +12,16 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-app.use(createVuestic())
+app.use(createVuestic({
+    config:{
+        colors:{
+            variables:{
+                primary: '#0000FF',
+                gray: '#767C88',
+                gold: '#FDCC0D',
+            }
+        }
+    }
+}))
 
 app.mount("#app");
