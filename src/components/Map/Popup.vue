@@ -49,14 +49,17 @@ const onLeave = (el: Element) => {
 </script>
 
 <template>
-	<div class="rounded-xl bg-white p-2 shadow-lg" @click="open = !open">
+	<div class="rounded-xl bg-white p-2 shadow-lg" >
 		<div class="flex items-center gap-2">
-			<div>
-				<h2 class="mr-auto pl-3 text-2xl font-semibold">{{ props.name }}</h2>
-				<div class="flex justify-items-center">
-					<va-icon class="w-6 flex-none" name="location_on" />
-					<p class="mr-auto text-sm text-gray-400">{{ curDistance.toFixed(2) }} km</p>
+			<div class="flex items-start justify-between">
+				<div>
+					<h2 class="mr-auto pl-3 text-2xl font-semibold">{{ props.name }}</h2>
+					<div class="flex justify-items-center">
+						<va-icon class="w-6 flex-none" name="location_on" />
+						<p class="mr-auto pb-4 text-sm text-gray-400">{{ curDistance.toFixed(2) }} km</p>
+					</div>
 				</div>
+				<va-button icon="add" color="textInverted" icon-color="textPrimary" class="mr-3 mb-2 flex-none" @click="open = !open" />
 			</div>
 		</div>
 		<Transition name="expand" @enter="onEnter" @after-enter="afterEnter" @leave="onLeave">
