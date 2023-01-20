@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Image } from "@/composables/useStations";
 import distance from "@turf/distance";
 import { useGeolocation } from "@vueuse/core";
 import { addIcons } from "oh-vue-icons";
@@ -8,7 +9,7 @@ import { RouterLink } from "vue-router";
 
 type Props = {
 	id: number;
-	image: string;
+	image: Image | null;
 	name: string;
 	location: [number, number];
 };
@@ -64,7 +65,7 @@ const onLeave = (el: Element) => {
 		</div>
 		<Transition name="expand" @enter="onEnter" @after-enter="afterEnter" @leave="onLeave">
 			<div class="w-full" v-if="open">
-				<img :src="props.image" alt="" class="rounded-lg px-4 pb-5 pt-4" />
+				<img v-if="props.image" :src="props.image.url" alt="" class="rounded-lg px-4 pb-5 pt-4" />
 			</div>
 		</Transition>
 

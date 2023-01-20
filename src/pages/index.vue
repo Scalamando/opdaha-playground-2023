@@ -10,6 +10,8 @@ import { useRouter } from "vue-router";
 import BaseLoader from "../components/BaseLoader.vue";
 import MapPopup from "../components/Map/Popup.vue";
 
+import { useAsyncState } from "@vueuse/core";
+
 addIcons(FaSearch);
 
 const Map = defineAsyncComponent(() => import("@/components/Map/index.vue"));
@@ -34,7 +36,7 @@ const mapStyle = import.meta.env.VITE_MAP_STYLE_URL ?? {
 	],
 };
 
-const stations = useAllStations();
+const { state: stations } = useAsyncState(useAllStations, [], { onSuccess: console.log, onError: console.log });
 
 const map = ref<Map>();
 function loadMap(loadedMap: Map) {
@@ -117,7 +119,7 @@ onDeactivated(() => (activated.value = false));
 						}"
 						@click.stop="() => focusStation(station)"
 					>
-						<img :src="station.images[0]" alt="" />
+						<img v-if="station.images.length !== 0" :src="station.images[0].url" alt="" />
 					</button>
 				</div>
 			</MapMarker>
@@ -129,7 +131,7 @@ onDeactivated(() => (activated.value = false));
 	<Transition name="slide-up" v-if="activated">
 		<MapPopup
 			v-if="focusedStation !== null"
-			:name="focusedStation.name"
+			:name="focusedStation.name || 'Spielplatz'"
 			:id="focusedStation.id"
 			:image="focusedStation.images[0]"
 			:location="focusedStation.location"
