@@ -51,13 +51,15 @@ type StationResponse = {
 		extras: Extra[];
 		equipments: Equipment[];
 		images: {
-			id: number;
-			attributes: {
-				width: number;
-				height: number;
-				url: string;
-			};
-		}[];
+			data: {
+				id: number;
+				attributes: {
+					width: number;
+					height: number;
+					url: string;
+				};
+			}[];
+		};
 	};
 };
 
@@ -75,36 +77,37 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 		surroundings: stationResponse.attributes.surroundings,
 		extras: stationResponse.attributes.extras,
 		equipments: stationResponse.attributes.equipments,
-		images: stationResponse.attributes.images.map((img) => ({
-			url: img.attributes.url,
-			height: img.attributes.height,
-			width: img.attributes.width,
-		})),
+		images:
+			stationResponse.attributes.images.data?.map((img) => ({
+				url: import.meta.env.VITE_APP_API_URL + img.attributes.url,
+				height: img.attributes.height,
+				width: img.attributes.width,
+			})) ?? [],
 	};
 
 	return station;
 }
 
-export async function useAllStations() {
+export async function useAllStations(): Promise<Station[]> {
 	const response = await axios.get(
-		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?populate=*"
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?pagination[pageSize]=350&populate=*"
 	);
 
 	if (response.status === 200) {
-		return response.data.map(transformStrapiStationResponse);
+		return response.data.data.map(transformStrapiStationResponse);
 	}
 
 	return [];
 }
 
-export async function useOneStation(id: number) {
+export async function useOneStation(id: number): Promise<Station | null> {
 	const response = await axios.get(
 		import.meta.env.VITE_APP_API_URL + "/api/playground/" + id + "?populate=*"
 	);
 
 	if (response.status === 200) {
-		return transformStrapiStationResponse(response.data);
+		return transformStrapiStationResponse(response.data.data);
 	}
 
-	return {};
+	return null;
 }
