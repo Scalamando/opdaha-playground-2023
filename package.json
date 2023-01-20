@@ -10,9 +10,14 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@turf/distance": "^6.5.0",
+    "@turf/helpers": "^6.5.0",
+    "@types/turf": "^3.5.32",
+    "@vueuse/core": "^9.11.1",
     "maplibre-gl": "^2.4.0",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^2.0.28",
+    "turf": "^3.0.14",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vuestic-ui": "^1.5.3"

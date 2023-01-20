@@ -132,6 +132,7 @@ onDeactivated(() => (activated.value = false));
 			:name="focusedStation.name"
 			:id="focusedStation.id"
 			:image="focusedStation.images[0]"
+			:location="focusedStation.location"
 			class="absolute inset-x-2 bottom-2 z-40"
 		/>
 	</Transition>
