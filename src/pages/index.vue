@@ -16,6 +16,8 @@ import FilterOverlay from "../components/Map/FilterOverlay.vue";
 
 addIcons(FaSearch);
 
+const value = "";
+
 const Map = defineAsyncComponent(() => import("@/components/Map/index.vue"));
 const MapMarker = defineAsyncComponent(() => import("@/components/Map/Marker.vue"));
 const mapStyle = import.meta.env.VITE_MAP_STYLE_URL ?? {
@@ -97,15 +99,17 @@ onDeactivated(() => (activated.value = false));
 <template>
 	<div
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
-	>
-		<h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1>
-	</div>
-	<div
-		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
-	>
-		<FilterOverlay class="mx-auto"></FilterOverlay>
-	</div>
+	>	
+		
+		<!-- <h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1> -->
 
+		<va-input class="mb-4 " v-model="value" placeholder="Suche">
+			<template #prependInner>
+				<va-icon name="search" />
+			</template>
+		</va-input>
+	</div>
+	
 	<Suspense timeout="500">
 		<Map
 			class="absolute inset-0"
@@ -149,6 +153,12 @@ onDeactivated(() => (activated.value = false));
 			class="absolute inset-x-2 bottom-2 z-40"
 		/>
 	</Transition>
+	<div
+		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
+	>
+		<FilterOverlay class="mx-auto"></FilterOverlay>
+	</div>
+
 </template>
 
 <style scoped>
@@ -170,7 +180,7 @@ onDeactivated(() => (activated.value = false));
 <style>
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl,
 .maplibregl-ctrl-top-right .maplibregl-ctrl {
-	margin: 1rem 1rem 0 0 !important;
+	margin: 1.5rem 1.5rem 0 0 !important;
 }
 
 .mapboxgl-ctrl-attrib.mapboxgl-compact,
