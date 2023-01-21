@@ -19,5 +19,12 @@ export const useFilterStore = defineStore("filter", () => {
 		equipment: [],
 	});
 
-	return { state };
+	function resetFilter(){
+		state.distance = [0]; 
+		state.age = [0, 16]; 
+		state.rating = "Alle"; 
+		state.wheelchair = "no"; 
+		state.equipment = []; 
+	}
+	return { state, resetFilter };
 });
