@@ -16,9 +16,11 @@ app.use(createVuestic({
     config:{
         colors:{
             variables:{
-                primary: '#0000FF',
+                primary: '#379B52',
                 gray: '#767C88',
                 gold: '#FDCC0D',
+                accent: '#E6ECE7',
+                danger: '#FF7A7A'
             }
         }
     }
