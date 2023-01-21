@@ -18,7 +18,10 @@ const route = useRoute();
 
 const { state: station } = useAsyncState(() => useOneStation(Number(route.params.id)), null);
 
-//seperate data
+function openLocationInMaps({lat , lng }: {lat : number, lng : number}){
+  
+  window.open( 'https://google.com/maps/dir/?api=1&destination=' + lat +',' + lng , '_blank', 'noreferrer')
+}
 
 // mock data
 const name = "Ratzeburger";
@@ -38,8 +41,8 @@ const alerts = [
 
 let own_pg_rating = 0;
 const user_ratings = [
-	{ name: "Indrani Neufeld", rating: 5, message: "Bester Spielplatz" },
-	{ name: "Anonymous User", rating: 4, message: "Haha, toller Spielplatz" },
+	{ name: "Indrani Neufeld", rating: 5, content: "Bester Spielplatz" },
+	{ name: "Anonymous User", rating: 4, content: "Haha, toller Spielplatz" },
 ];
 const images_mock = [
 	{
@@ -103,7 +106,7 @@ const images_mock = [
 					</div>
 					<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
 				</div>
-				<va-button class="bg-primary h-12 flex-none">
+				<va-button class="bg-primary h-12 flex-none" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">
 					<va-icon class="mr-2" name="location_on" color="#FFFFFF" />
 				</va-button>
 			</div>
@@ -168,7 +171,7 @@ const images_mock = [
 					<va-icon name="directions_bus" class="mr-2 flex-none" />
 					<p>{{ busstation }}</p>
 				</div>
-				<va-button class="w-full">Route in Maps öffnen</va-button>
+				<va-button class="w-full" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">Route in Maps öffnen</va-button>
 			</div>
 			<div>
 				<h4 class="va-h4">Bewertung</h4>
@@ -182,7 +185,7 @@ const images_mock = [
 					<div>
 						<h6 class="va-h6">{{ user.name }}</h6>
 						<va-rating :readonly="true" v-model="user.rating" color="gold" />
-						<p>{{ user.message }}</p>
+						<p>{{ user.content }}</p>
 					</div>
 				</div>
 			</div>
