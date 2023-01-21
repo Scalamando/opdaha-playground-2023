@@ -130,7 +130,7 @@ export async function useAllStations({ filter }: { filter?: Filter }): Promise<S
 
 export async function useOneStation(id: number): Promise<Station | null> {
 	const response = await axios.get<{ data: StationResponse }>(
-		import.meta.env.VITE_APP_API_URL + "/api/playground/" + id + "?populate=*"
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds/" + id + "?populate=*"
 	);
 
 	if (response.status === 200) {
