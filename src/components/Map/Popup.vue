@@ -52,7 +52,7 @@ const onLeave = (el: Element) => {
 <template>
 	<div class="rounded-xl bg-white p-2 shadow-lg" >
 		<div class="flex items-center gap-2">
-			<div class="flex items-start justify-between">
+			<div class="flex items-start justify-between" @click="open = !open">
 				<div>
 					<h2 class="mr-auto pl-3 text-2xl font-semibold">{{ props.name }}</h2>
 					<div class="flex justify-items-center">
@@ -60,7 +60,10 @@ const onLeave = (el: Element) => {
 						<p class="mr-auto pb-4 text-sm text-gray-400">{{ curDistance.toFixed(2) }} km</p>
 					</div>
 				</div>
-				<va-button icon="add" color="textInverted" icon-color="textPrimary" class="mr-3 mb-2 flex-none" @click="open = !open" />
+				<va-button color="textInverted" icon-color="textPrimary" class="mr-3 mb-2 flex-none">
+					<va-icon v-if="!open" name="add">add</va-icon> 
+					<va-icon v-else name="remove">remove</va-icon>
+				</va-button>
 			</div>
 		</div>
 		<Transition name="expand" @enter="onEnter" @after-enter="afterEnter" @leave="onLeave">

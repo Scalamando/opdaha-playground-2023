@@ -1,70 +1,65 @@
-<script>
+<script lang="ts">
+import ChipMultiSelect from "@/components/ChipMultiSelect.vue";
+import { useFilterStore } from "@/stores/filter";
+import { defineComponent } from "vue";
+import { RouterLink } from "vue-router";
 
-export default {
-
+export default defineComponent({
+	components: { ChipMultiSelect, RouterLink },
+	setup() {
+		const filterStore = useFilterStore();
+		return {
+			filterStore,
+		};
+	},
 	data() {
 		return {
-			distanceValue: [0],
-			ageValue: [0, 5],
-
-			ratingOptions: [
-				{ label: "Alle", value: "Alle" },
-				{ label: "3", value: "3 Sterne", iconRight: "star" },
-				{ label: "4", value: "4 Sterne", iconRight: "star" },
-				{ label: "5", value: "5 Sterne", iconRight: "star" },
-			],
-			model: "Alle",
-
-			wheelchairOptions: [
-				{ label: "Nein", value: "Nein" },
-				{ label: "Ja", value: "Ja" },
-				{ label: "Limitiert", value: "Limitiert" },
-			],
-			chair: "Nein",
-
-			equipments: [
-				{ id: 1, label: "Rutsche", value: false },
-				{ id: 2, label: "Schaukel", value: false },
-				{ id: 3, label: "Klettergerüst", value: false },
-				{ id: 4, label: "Sandkasten", value: false },
-				{ id: 5, label: "Wippe", value: false },
-				{ id: 6, label: "Feder-Wippe", value: false },
-				{ id: 7, label: "Spielhaus", value: false },
-				{ id: 8, label: "Karusel", value: false },
-				{ id: 9, label: "Wasser", value: false },
-			],
+			options: {
+				rating: [
+					{ label: "Alle", value: "Alle" },
+					{ label: "3", value: 3, iconRight: "star" },
+					{ label: "4", value: 4, iconRight: "star" },
+					{ label: "5", value: 5, iconRight: "star" },
+				],
+				wheelchair: [
+					{ label: "Nein", value: "no" },
+					{ label: "Ja", value: "yes" },
+					{ label: "Limitiert", value: "limited" },
+				],
+				equipment: [
+					{ label: "Rutsche", value: "slide" },
+					{ label: "Schaukel", value: "swing" },
+					{ label: "Klettergerüst", value: "climbingframe" },
+					{ label: "Sandkasten", value: "sandpit" },
+					{ label: "Wippe", value: "seesaw" },
+					{ label: "Feder-Wippe", value: "springy" },
+					{ label: "Spielhaus", value: "playhouse" },
+					{ label: "Karusel", value: "roundabout" },
+					{ label: "Wasser", value: "water" },
+				],
+			},
 		};
 	},
 	methods: {
-		processTrackLabel(value, order) {
+		processTrackLabel(value: string, order: number) {
 			return order === 0 ? `${value}Jahre` : `${value}Jahre`;
 		},
-		toggleChip(id) {
-			const index = this.equipments.findIndex((eq) => eq.id === id);
-			this.equipments[index].value = !this.equipments[index].value;
-		},
 	},
-};
+});
 </script>
 
 <template>
 	<div class="w-full p-4">
 		<div class="flex items-center justify-between">
 			<h1 class="va-h1">Filter</h1>
-			<span class="text-right"><va-icon class="material-icons" size="large">cancel</va-icon></span>
+			<RouterLink class="text-right" to="/"
+				><va-icon class="material-icons" size="large">cancel</va-icon></RouterLink
+			>
 		</div>
 
 		<div class="mb-6">
 			<p class="mb-6 text-base font-semibold">Spielgeräte</p>
-			<va-chip
-				@click="toggleChip(equipment.id)"
-				:outline="!equipment.value"
-				v-for="equipment in equipments"
-				:key="equipment.id"
-				class="m-1"
-			>
-				{{ equipment.label }}
-			</va-chip>
+			<ChipMultiSelect :options="options.equipment" v-model="filterStore.state.equipment" />
 		</div>
 
 		<va-divider />
@@ -72,10 +67,15 @@ export default {
 		<div class="mb-6">
 			<div class="flex justify-between">
 				<p class="mb-6 text-base font-semibold">Distanz</p>
-				<span class="text-right">{{ distanceValue[0] }} km</span>
+				<span class="text-right">{{ filterStore.state.distance[0] }} km</span>
 			</div>
 
-			<va-slider class="mb-4" v-model="distanceValue[0]" track-label-visible :max="15" />
+			<va-slider
+				class="mb-4"
+				v-model="filterStore.state.distance[0]"
+				track-label-visible
+				:max="15"
+			/>
 		</div>
 
 		<va-divider />
@@ -83,12 +83,14 @@ export default {
 		<div class="mb-6">
 			<div class="flex">
 				<p class="mb-6 text-base font-semibold">Alter</p>
-				<span class="text-right">{{ ageValue[0] }} - {{ ageValue[1] }} Jahre</span>
+				<span class="text-right"
+					>{{ filterStore.state.age[0] }} - {{ filterStore.state.age[1] }} Jahre</span
+				>
 			</div>
 
 			<va-slider
 				class="mb-4"
-				v-model="ageValue"
+				v-model="filterStore.state.age"
 				range
 				track-label-visible
 				:track-label="processTrackLabel"
@@ -101,15 +103,15 @@ export default {
 		<div class="mb-6">
 			<div class="flex">
 				<p class="mb-6 text-base font-semibold">Bewertung</p>
-				<span class="text-right">{{ model }}</span>
+				<span class="text-right">{{ filterStore.state.rating }}</span>
 			</div>
 
 			<va-button-toggle
 				preset="secondary"
-				grow="true"
+				grow
 				border-color="primary"
-				v-model="model"
-				:options="ratingOptions"
+				v-model="filterStore.state.rating"
+				:options="options.rating"
 			/>
 		</div>
 
@@ -118,19 +120,18 @@ export default {
 		<div class="mb-6">
 			<div class="flex justify-between">
 				<p class="mb-6 text-base font-semibold">Barrierefreiheit</p>
-				<span class="text-right">{{ chair }}</span>
+				<span class="text-right">{{ filterStore.state.wheelchair }}</span>
 			</div>
 
 			<va-button-toggle
 				preset="secondary"
-				grow="true"
+				grow
 				border-color="primary"
-				v-model="chair"
-				:options="wheelchairOptions"
+				v-model="filterStore.state.wheelchair"
+				:options="options.wheelchair"
 			/>
 		</div>
 
 		<va-divider />
-
 	</div>
 </template>
