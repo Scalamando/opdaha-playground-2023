@@ -13,7 +13,7 @@ export type Filter = {
 export const useFilterStore = defineStore("filter", () => {
 	const state = reactive<Filter>({
 		distance: [0],
-		age: [0, 5],
+		age: [0, 16],
 		rating: "Alle",
 		wheelchair: "no",
 		equipment: [],
