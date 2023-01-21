@@ -13,6 +13,9 @@ const route = useRoute();
 
 console.log(route.params);
 
+// get data from strapi
+const station = {};
+
 // mock data
 const name = 'Ratzeburger';
 const distance = '500';
@@ -28,15 +31,28 @@ const alerts = [{type: 'warning', content: 'Die Schaukel ist kaputt'}, {type: 'm
 
 let own_pg_rating = 0;
 const user_ratings = [{ name: 'Indrani Neufeld', rating: 5, message: 'Bester Spielplatz' }, { name: 'Anonymous User', rating: 4, message: 'Haha, toller Spielplatz' }];
+const images = [{url: 'https://picsum.photos/600/400',
+	width: 600,
+	height: 400},
+  {url: 'https://picsum.photos/500/350',
+	width: 500,
+	height: 350}
+]
 
 </script>
 
 <template>
+  <nav
+		class="absolute top-2 left-2 z-50 h-12 items-center "
+	>
+		<a @click.prevent="$router.back()" class="bg-white rounded-full py-4 px-4 flex items-center content-center">
+			<va-icon name="arrow_back_ios" />
+		</a>
+  </nav>
   <div>
-    <p>Slider + backbutton</p>
     <Swiper
 			:slides-per-view="1.15"
-			:space-between="16"
+			:space-between="8"
 			centered-slides
 			centered-slides-bounds
 			css-mode
@@ -44,15 +60,15 @@ const user_ratings = [{ name: 'Indrani Neufeld', rating: 5, message: 'Bester Spi
 			v-viewer.static="{ toolbar: false, navbar: false, title: (img : HTMLImageElement) => img.alt }"
 		>
 			<SwiperSlide
-				v-for="image in station?.media"
-				:key="image.directus_files_id.id"
+				v-for="(image, index) in images"
+				:key="index"
 			>
 				<img
-					:src="useDirectusImage(image.directus_files_id.id)"
-					:width="image.directus_files_id.width ?? undefined"
-					:height="image.directus_files_id.height ?? undefined"
-					:alt="image.directus_files_id.description ?? 'Ein Bild'"
-					class="rounded-xl shadow-md shadow-neutral-300"
+					:src="image.url"
+					width="500"
+					height="250"
+					:alt="'Ein Bild von einem Spielplatz'"
+					class="rounded-b-xl object-cover w-[500px] h-[250px]"
 				/>
 			</SwiperSlide>
 		</Swiper>
