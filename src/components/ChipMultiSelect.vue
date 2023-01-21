@@ -12,7 +12,10 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const selected = ref<{ [key: string]: boolean }>(
-	props.options.reduce((all, opt) => ({ ...all, [opt.value]: false }), {})
+	props.options.reduce(
+		(all, opt) => ({ ...all, [opt.value]: props.modelValue.indexOf(opt.value) !== -1 }),
+		{}
+	)
 );
 watch(
 	selected,
