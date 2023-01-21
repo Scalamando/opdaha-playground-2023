@@ -17,6 +17,14 @@ const selected = ref<{ [key: string]: boolean }>(
 		{}
 	)
 );
+
+watch(() => props.modelValue, (newValue) => {
+	selected.value = props.options.reduce(
+		(all, opt) => ({ ...all, [opt.value]: props.modelValue.indexOf(opt.value) !== -1 }),
+		{}
+	)
+})
+
 watch(
 	selected,
 	(newSelected) => {

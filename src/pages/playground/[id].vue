@@ -50,7 +50,7 @@ const route = useRoute();
 const { state: station, execute } = useAsyncState(() => useOneStation(Number(route.params.id)), null);
 
 function openLocationInMaps({lat , lng }: {lat : number, lng : number}){
-  
+
   window.open( 'https://google.com/maps/dir/?api=1&destination=' + lat +',' + lng , '_blank', 'noreferrer')
 }
 
@@ -100,9 +100,9 @@ const imageSorroundings ={
     toilet: wcIcon,
 }
 const imageExtra={
-	bench: bankIcon, 
-	ground: untergrundIcon, 
-	shade: schattenIcon, 
+	bench: bankIcon,
+	ground: untergrundIcon,
+	shade: schattenIcon,
 	fence: zaunIcon,
 	greenery: grunIcon
 }
@@ -155,11 +155,11 @@ const imageWheelchair={
 					<div class="flex">
 						<div class="flex flex-none pr-4">
 							<va-icon class="flex-none" name="location_on" color="gray" />
-							<p>{{ curDistance.toFixed(2) }} km</p>
+							<p class="text-gray-500">{{ curDistance.toFixed(2) }} km</p>
 						</div>
 						<div class="flex">
 							<OhVueIcon name="fa-child" color="gray" class="flex-none"></OhVueIcon>
-							<p>{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
+							<p class="text-gray-500">{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
 						</div>
 					</div>
 					<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
@@ -171,7 +171,7 @@ const imageWheelchair={
 			<!-- messages/ additional info -->
 			<div class="flex py-4">
 				<div class="flex">
-					<va-card v-for="alert in alerts" class="row mx-4 w-1/2 !shadow-none" color="#ffffff">
+					<va-card v-for="alert in alerts" class="row mx-4 w-1/2 !shadow-none" color="accent">
 						<va-card-content class="mx-4 flex h-full items-center justify-center px-4">
 							<va-icon v-if="alert.type === 'warning'" name="error" class="pr-5 pl-2" />
 							<va-icon v-else name="info" class="pr-5 pl-2" />
@@ -188,7 +188,7 @@ const imageWheelchair={
 						<va-card
 							v-for="item in station.surroundings"
 							class="mx-4 my-3 py-4 !shadow-none"
-							color="#ffffff"
+							color="accent"
 						>
 							<img :src="imageSorroundings[item]" alt="" class="flex mx-auto w-8"/>
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
@@ -202,7 +202,7 @@ const imageWheelchair={
 					<h4 class="va-h6">Barrierefreiheit</h4>
 					<div class="grid grid-cols-3 text-center">
 						<va-card class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
-							<img :src="imageWheelchair[item]" alt="" class="flex mx-auto w-8"/>
+							<img :src="imageWheelchair[station.wheelchair]" alt="" class="flex mx-auto w-8"/>
 							<va-card-content class="py-4"> {{ station.wheelchair }}</va-card-content>
 						</va-card>
 					</div>
@@ -214,7 +214,7 @@ const imageWheelchair={
 					<h4 class="va-h6">Spielgeräte</h4>
 					<div class="grid grid-cols-3 text-center">
 						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
-							
+
 							<img :src="imageMap[item]" alt="" class="flex mx-auto w-8"/>
 
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
@@ -244,7 +244,7 @@ const imageWheelchair={
 					<va-icon name="account_circle" size="4rem" class="flex-none pr-4" />
 					<div>
 						<h6 class="va-h6">{{ userRating.title }}</h6>
-						<va-rating :readonly="true" v-model="userRating.rating" color="gold" />
+						<va-rating :readonly="true" v-model="userRating.rating" color="primary" />
 						<p>{{ userRating.content }}</p>
 					</div>
 				</div>
