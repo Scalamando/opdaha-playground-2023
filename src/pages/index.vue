@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAllStations, type Station } from "@/composables/useStations";
+import { useAllStations, useStationByName, type Station } from "@/composables/useStations";
 import { addIcons } from "oh-vue-icons";
 import { FaSearch } from "oh-vue-icons/icons";
 import { defineAsyncComponent, onActivated, onDeactivated, ref, watch } from "vue";
@@ -97,22 +97,26 @@ onDeactivated(() => (focusedQueried.value = false));
 const activated = ref(true);
 onActivated(() => (activated.value = true));
 onDeactivated(() => (activated.value = false));
+
+const searchTerm = ref("");
+async function searchRequest() {
+	stations.value = await useStationByName(searchTerm.value);
+}
 </script>
 
 <template>
 	<div
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
-	>	
-		
+	>
 		<!-- <h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1> -->
 
-		<va-input class="mb-4 " v-model="value" placeholder="Suche">
+		<va-input class="mb-4" v-model="searchTerm" placeholder="Suche" @keyup="searchRequest">
 			<template #prependInner>
 				<va-icon name="search" />
 			</template>
 		</va-input>
 	</div>
-	
+
 	<Suspense timeout="500">
 		<Map
 			class="absolute inset-0"
@@ -161,7 +165,6 @@ onDeactivated(() => (activated.value = false));
 	>
 		<FilterOverlay class="mx-auto"></FilterOverlay>
 	</div>
-
 </template>
 
 <style scoped>
