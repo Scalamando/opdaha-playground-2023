@@ -4,17 +4,15 @@ import { FaChild } from "oh-vue-icons/icons";
 import { useRoute } from "vue-router";
 
 // picture carousel
+import CreateRating from "@/components/CreateRating.vue";
+import { useOneStation } from "@/composables/useStations";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 addIcons(FaChild);
 
 const route = useRoute();
-
-console.log(route.params);
-
-// get data from strapi
-const station = {};
+const station = useOneStation(Number(route.params.id));
 
 // mock data
 const name = "Ratzeburger";
@@ -38,8 +36,16 @@ const user_ratings = [
 	{ name: "Anonymous User", rating: 4, message: "Haha, toller Spielplatz" },
 ];
 const images = [
-	{ url: "https://picsum.photos/600/400", width: 600, height: 400 },
-	{ url: "https://picsum.photos/500/350", width: 500, height: 350 },
+	{
+		url: "https://picsum.photos/600/400",
+		width: 600,
+		height: 400,
+	},
+	{
+		url: "https://picsum.photos/500/350",
+		width: 500,
+		height: 350,
+	},
 ];
 </script>
 
@@ -60,7 +66,7 @@ const images = [
 			centered-slides-bounds
 			css-mode
 			class="mb-4"
-			v-viewer.static="{ toolbar: false, navbar: false, title: (img : HTMLImageElement) => img.alt }"
+			v-viewer.static="{ toolbar: false, navbar: false, title: (img: HTMLImageElement) => img.alt }"
 		>
 			<SwiperSlide v-for="(image, index) in images" :key="index">
 				<img
@@ -88,7 +94,7 @@ const images = [
 						<p>{{ ageRange }} Jahre</p>
 					</div>
 				</div>
-				<va-rating v-model="pg_rating" color="gold" class="py-4"></va-rating>
+				<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
 			</div>
 			<va-button class="bg-primary h-12 flex-none">
 				<va-icon class="mr-2" name="location_on" color="#FFFFFF" />
@@ -156,22 +162,24 @@ const images = [
 		<div>
 			<h4 class="va-h4">Bewertung</h4>
 			<div class="flex py-4">
-				<!-- Rating Component -->
-				<va-rating v-model="own_pg_rating" color="gold" />
-				<va-button class="flex-none">
-					<va-icon name="warning" class="pr-4" />
-					Melden
-				</va-button>
+				<CreateRating />
 			</div>
 			<!-- user ratings -->
-			<div v-for="user in user_ratings" class="flex items-center pl-6 pt-6">
+			<h5 class="va-h5">Bewertung anderer Nutzenden</h5>
+			<div v-for="user in user_ratings" class="flex items-center pl-6 pt-4">
 				<va-icon name="account_circle" size="4rem" class="flex-none pr-4" />
 				<div>
 					<h6 class="va-h6">{{ user.name }}</h6>
-					<va-rating v-model="user.rating" color="gold" />
+					<va-rating :readonly="true" v-model="user.rating" color="gold" />
 					<p>{{ user.message }}</p>
 				</div>
 			</div>
 		</div>
+		<va-button class="mt-8 flex w-full justify-center">
+			<div class="w-full">
+				<va-icon name="warning" class="pr-4" />
+				Mängel Melden
+			</div>
+		</va-button>
 	</div>
 </template>
