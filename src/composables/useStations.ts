@@ -1,3 +1,6 @@
+import type { Filter } from "@/stores/filter";
+import distance from "@turf/distance";
+import { useGeolocation } from "@vueuse/core";
 import axios from "axios";
 
 export type Image = {
@@ -88,13 +91,38 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 	return station;
 }
 
-export async function useAllStations(): Promise<Station[]> {
+export async function useAllStations({ filter }: { filter?: Filter }): Promise<Station[]> {
 	const response = await axios.get<{ data: StationResponse[] }>(
-		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?pagination[start]=0&pagination[limit]=350&populate=*"
+		import.meta.env.VITE_APP_API_URL +
+			"/api/playgrounds?pagination[start]=0&pagination[limit]=350&populate=*"
 	);
 
 	if (response.status === 200) {
-		return response.data.data.map(transformStrapiStationResponse);
+		let stations = response.data.data.map(transformStrapiStationResponse);
+
+		if (filter) {
+			const { coords } = useGeolocation({ enableHighAccuracy: true });
+			stations = stations.filter((station) => {
+				const isInDistance =
+					filter.distance[0] > 0
+						? distance(station.location, [coords.value.latitude, coords.value.longitude]) <
+						  filter.distance[0]
+						: true;
+
+				const isInAgeRange =
+					(station.minAge ?? 0) <= filter.age[0] && (station.maxAge ?? 16) >= filter.age[1];
+
+				const hasWheelchair = station.wheelchair === filter.wheelchair;
+
+				const hasEquipment = filter.equipment.every(
+					(eq) => station.equipments.find((stationEq) => stationEq === eq) != null
+				);
+
+				return isInDistance && isInAgeRange && hasWheelchair && hasEquipment;
+			});
+		}
+
+		return stations;
 	}
 
 	return [];
