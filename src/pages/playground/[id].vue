@@ -15,6 +15,34 @@ import { useOneStation } from "@/composables/useStations";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
+//import icons
+import SliteIcon from "@/assets/icons/slide.png"
+import SwingIcon from "@/assets/icons/swing.png"
+import ClimbingframeIcon from "@/assets/icons/klettergerust.png"
+import SandpitIcon from "@/assets/icons/sandkasten.png"
+import SeesawIcon from "@/assets/icons/wippe.png"
+import WasserIcon from "@/assets/icons/wasser.png"
+import KaruselIcon from "@/assets/icons/merry-go-round.png"
+import SpielhausIcon from "@/assets/icons/spielplatz.png"
+import FederIcon from "@/assets/icons/kinderfahrt.png"
+
+import CafeIcon from "@/assets/icons/coffee-cup.png"
+import RestaurantIcon from "@/assets/icons/restaurant.png"
+import BakeryIcon from "@/assets/icons/backerei.png"
+import wcIcon from "@/assets/icons/wc-sign.png"
+import kioskIcon from "@/assets/icons/kiosk.png"
+import shoppingIcon from "@/assets/icons/shopping-cart.png"
+
+import bankIcon from "@/assets/icons/bench.png"
+import untergrundIcon from "@/assets/icons/sand.png"
+import schattenIcon from "@/assets/icons/shadow.png"
+import zaunIcon from "@/assets/icons/picket.png"
+import grunIcon from "@/assets/icons/nature.png"
+
+import wheelchairIcon from "@/assets/icons/disability.png"
+import noWheelchairIcon from "@/assets/icons/warning.png"
+import limitedWheelchairIcon from "@/assets/icons/limited.png"
+
 addIcons(FaChild);
 
 const route = useRoute();
@@ -22,7 +50,7 @@ const route = useRoute();
 const { state: station, execute } = useAsyncState(() => useOneStation(Number(route.params.id)), null);
 
 function openLocationInMaps({lat , lng }: {lat : number, lng : number}){
-  
+
   window.open( 'https://google.com/maps/dir/?api=1&destination=' + lat +',' + lng , '_blank', 'noreferrer')
 }
 
@@ -51,6 +79,40 @@ const user_ratings = [
 	{ name: "Indrani Neufeld", rating: 5, content: "Bester Spielplatz" },
 	{ name: "Anonymous User", rating: 4, content: "Haha, toller Spielplatz" },
 ];
+
+const imageMap = {
+	slide: SliteIcon,
+    swing: SwingIcon,
+    climbingframe: ClimbingframeIcon,
+    sandpit: SandpitIcon,
+    seesaw: SeesawIcon,
+    springy: FederIcon,
+    playhouse: SpielhausIcon,
+    roundabout: KaruselIcon,
+    water: WasserIcon,
+}
+const imageSorroundings ={
+	cafe: CafeIcon,
+    restaurant: RestaurantIcon,
+    bakery: BakeryIcon,
+    shopping: shoppingIcon,
+    kiosk: kioskIcon,
+    toilet: wcIcon,
+}
+const imageExtra={
+	bench: bankIcon,
+	ground: untergrundIcon,
+	shade: schattenIcon,
+	fence: zaunIcon,
+	greenery: grunIcon
+}
+const imageWheelchair={
+	yes: wheelchairIcon,
+	no: noWheelchairIcon,
+	limited: limitedWheelchairIcon
+}
+
+
 
 </script>
 
@@ -128,7 +190,7 @@ const user_ratings = [
 							class="mx-4 my-3 py-4 !shadow-none"
 							color="accent"
 						>
-							<va-icon name="info" class="py-4 px-2" />
+							<img :src="imageSorroundings[item]" alt="" class="flex mx-auto w-8"/>
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
 						</va-card>
 					</div>
@@ -139,8 +201,8 @@ const user_ratings = [
 				<div class="w-full">
 					<h4 class="va-h6">Barrierefreiheit</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card class="mx-4 my-3 py-4 !shadow-none" color="accent">
-							<va-icon name="info" class="py-4 px-2" />
+						<va-card class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
+							<img :src="imageWheelchair[station.wheelchair]" alt="" class="flex mx-auto w-8"/>
 							<va-card-content class="py-4"> {{ station.wheelchair }}</va-card-content>
 						</va-card>
 					</div>
@@ -151,8 +213,10 @@ const user_ratings = [
 				<div class="w-full">
 					<h4 class="va-h6">Spielgeräte</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="accent">
-							<va-icon name="info" class="py-4 px-2" />
+						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
+
+							<img :src="imageMap[item]" alt="" class="flex mx-auto w-8"/>
+
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
 						</va-card>
 					</div>
