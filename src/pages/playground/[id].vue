@@ -112,7 +112,27 @@ const imageWheelchair={
 	limited: limitedWheelchairIcon
 }
 
-
+const tranlsations = {
+  surroundings: {
+    "restaurant": "Restaurant",
+    "toilet": "Toilette",
+    "shopping": "Einkaufen",
+    "cafe": "Cafe",
+    "bakery": "Bäkerei",
+    "kiosk": "Kiosk",
+  },
+  equipment: {
+    "slide": "Rutsche",
+		"swing": "Schaukel",
+		"climbingframe": "Klettergerüst",
+		"sandpit": "Sandkasten",
+		"seesaw": "Wippe",
+		"springy": "Feder-Wippe",
+		"playhouse": "Spielhaus",
+		"roundabout": "Karusel",
+		"water": "Wasser",
+  },
+}
 
 </script>
 
@@ -162,7 +182,7 @@ const imageWheelchair={
 							<p class="text-gray-500">{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
 						</div>
 					</div>
-					<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
+					<va-rating :readonly="true" v-model="pg_rating" color="primary" class="py-4"></va-rating>
 				</div>
 				<va-button class="bg-primary h-12 flex-none" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">
 					<va-icon class="mr-2" name="location_on" color="#FFFFFF" />
@@ -191,7 +211,7 @@ const imageWheelchair={
 							color="accent"
 						>
 							<img :src="imageSorroundings[item]" alt="" class="flex mx-auto w-8"/>
-							<va-card-content class="py-4"> {{ item }}</va-card-content>
+							<va-card-content class="py-4"> {{ tranlsations.surroundings[item] }}</va-card-content>
 						</va-card>
 					</div>
 				</div>
@@ -201,9 +221,8 @@ const imageWheelchair={
 				<div class="w-full">
 					<h4 class="va-h6">Barrierefreiheit</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
-							<img :src="imageWheelchair[station.wheelchair]" alt="" class="flex mx-auto w-8"/>
-							<va-card-content class="py-4"> {{ station.wheelchair }}</va-card-content>
+						<va-card class="mx-4 my-3 py-4 !shadow-none" color="accent">
+							<va-card-content class="py-4"> {{ station.wheelchair ?? 'Unbekannt'}}</va-card-content>
 						</va-card>
 					</div>
 				</div>
@@ -213,19 +232,19 @@ const imageWheelchair={
 				<div class="w-full">
 					<h4 class="va-h6">Spielgeräte</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
+						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="accent">
 
 							<img :src="imageMap[item]" alt="" class="flex mx-auto w-8"/>
 
-							<va-card-content class="py-4"> {{ item }}</va-card-content>
+							<va-card-content class="py-4"> {{ tranlsations.equipment[item] }}</va-card-content>
 						</va-card>
 					</div>
 				</div>
 			</div>
 
-			<div>
+			<div class="mt-8">
 				<h4 class="va-h4">Standort</h4>
-				<div class="flex pb-4">
+				<div class="flex pb-6 mt-6">
 					<va-icon name="location_on" class="mr-2 flex-none" />
 					<p>{{ adress }}</p>
 					<va-icon name="directions_bus" class="mr-2 flex-none" />
@@ -233,7 +252,7 @@ const imageWheelchair={
 				</div>
 				<va-button class="w-full" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">Route in Maps öffnen</va-button>
 			</div>
-			<div>
+			<div class="mt-8">
 				<h4 class="va-h4">Bewertung</h4>
 				<div class="flex py-4">
 					<CreateRating :station_id="station.id" @newRating="execute()"/>
