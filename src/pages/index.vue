@@ -98,8 +98,14 @@ onDeactivated(() => (activated.value = false));
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
 	>
 		<h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1>
-		<FilterOverlay></FilterOverlay>
+		
 	</div>
+	<div
+		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
+	>
+	<FilterOverlay class="flex w-full"></FilterOverlay>
+	</div>
+	
 	<Suspense timeout="500">
 		<Map
 			class="absolute inset-0"
