@@ -1,3 +1,4 @@
+import type { UserRating } from "@/composables/useUserRating";
 import type { Filter } from "@/stores/filter";
 import { useGeoLocationStore } from "@/stores/geolocation";
 import distance from "@turf/distance";
@@ -37,6 +38,7 @@ export type Station = {
 	extras: Extra[];
 	equipments: Equipment[];
 	images: Image[];
+	userRatings: UserRating[];
 };
 
 type StationResponse = {
@@ -53,6 +55,12 @@ type StationResponse = {
 		surroundings: Surrounding[];
 		extras: Extra[];
 		equipment: Equipment[];
+		userratings: {
+			data: {
+				id: number;
+				attributes: UserRating;
+			}[];
+		};
 		images: {
 			data: {
 				id: number;
@@ -80,6 +88,13 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 		surroundings: stationResponse.attributes.surroundings,
 		extras: stationResponse.attributes.extras,
 		equipments: stationResponse.attributes.equipment,
+		userRatings:
+			stationResponse.attributes.userratings.data?.map((rating) => ({
+				id: rating.id,
+				rating: rating.attributes.rating,
+				title: rating.attributes.title,
+				content: rating.attributes.content,
+			})) ?? [],
 		images:
 			stationResponse.attributes.images.data?.map((img) => ({
 				url: import.meta.env.VITE_APP_API_URL + img.attributes.url,
