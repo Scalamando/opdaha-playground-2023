@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
+// Viewport height hack for mobile
+function setViewportHeight() {
+	const vh = window.innerHeight * 0.01;
+	document.documentElement.style.setProperty("--vh", `${vh}px`);
+}
+setViewportHeight();
+window.addEventListener("resize", setViewportHeight, { passive: true });
+
+
 </script>
 
 <template>
@@ -20,7 +29,7 @@ import { RouterView } from "vue-router";
 html,
 body,
 #app {
-	min-height: 100vh;
+	min-height: calc(var(--vh,1vh)*100) !important;
 	height: 100%;
 	width: 100%;
 	@apply bg-slate-100;
