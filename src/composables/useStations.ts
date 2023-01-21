@@ -1,3 +1,6 @@
+import type { Filter } from "@/stores/filter";
+import { useGeoLocationStore } from "@/stores/geolocation";
+import distance from "@turf/distance";
 import axios from "axios";
 
 export type Image = {
@@ -49,7 +52,7 @@ type StationResponse = {
 		location: [number, number];
 		surroundings: Surrounding[];
 		extras: Extra[];
-		equipments: Equipment[];
+		equipment: Equipment[];
 		images: {
 			data: {
 				id: number;
@@ -76,7 +79,7 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 		location: stationResponse.attributes.location,
 		surroundings: stationResponse.attributes.surroundings,
 		extras: stationResponse.attributes.extras,
-		equipments: stationResponse.attributes.equipments,
+		equipments: stationResponse.attributes.equipment,
 		images:
 			stationResponse.attributes.images.data?.map((img) => ({
 				url: import.meta.env.VITE_APP_API_URL + img.attributes.url,
@@ -88,21 +91,49 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 	return station;
 }
 
-export async function useAllStations(): Promise<Station[]> {
-	const response = await axios.get(
-		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?pagination[pageSize]=350&populate=*"
+export async function useAllStations({ filter }: { filter?: Filter }): Promise<Station[]> {
+	const response = await axios.get<{ data: StationResponse[] }>(
+		import.meta.env.VITE_APP_API_URL +
+			"/api/playgrounds?pagination[start]=0&pagination[limit]=350&populate=*"
 	);
 
 	if (response.status === 200) {
-		return response.data.data.map(transformStrapiStationResponse);
+		let stations = response.data.data.map(transformStrapiStationResponse);
+
+		if (filter) {
+			const geoStore = useGeoLocationStore();
+			console.log(geoStore.coords);
+
+			stations = stations.filter((station) => {
+				const isInDistance =
+					filter.distance[0] > 0 && geoStore.coords.latitude !== Infinity
+						? distance(station.location, [geoStore.coords.longitude, geoStore.coords.latitude]) <
+						  filter.distance[0]
+						: true;
+
+				const isInAgeRange =
+					(station.minAge ?? 0) <= filter.age[0] && (station.maxAge ?? 16) >= filter.age[1];
+
+				const meetsWheelchairFilter =
+					filter.wheelchair === "no" ? true : station.wheelchair === filter.wheelchair;
+
+				const hasEquipment = filter.equipment.every(
+					(eq) => station.equipments?.find((stationEq) => stationEq === eq) != null
+				);
+
+				return isInDistance && isInAgeRange && meetsWheelchairFilter && hasEquipment;
+			});
+		}
+
+		return stations;
 	}
 
 	return [];
 }
 
 export async function useOneStation(id: number): Promise<Station | null> {
-	const response = await axios.get(
-		import.meta.env.VITE_APP_API_URL + "/api/playground/" + id + "?populate=*"
+	const response = await axios.get<{ data: StationResponse }>(
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds/" + id + "?populate=*"
 	);
 
 	if (response.status === 200) {
