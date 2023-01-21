@@ -52,7 +52,7 @@ type StationResponse = {
 		location: [number, number];
 		surroundings: Surrounding[];
 		extras: Extra[];
-		equipments: Equipment[];
+		equipment: Equipment[];
 		images: {
 			data: {
 				id: number;
@@ -79,7 +79,7 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 		location: stationResponse.attributes.location,
 		surroundings: stationResponse.attributes.surroundings,
 		extras: stationResponse.attributes.extras,
-		equipments: stationResponse.attributes.equipments,
+		equipments: stationResponse.attributes.equipment,
 		images:
 			stationResponse.attributes.images.data?.map((img) => ({
 				url: import.meta.env.VITE_APP_API_URL + img.attributes.url,
@@ -118,7 +118,7 @@ export async function useAllStations({ filter }: { filter?: Filter }): Promise<S
 					filter.wheelchair === "no" ? true : station.wheelchair === filter.wheelchair;
 
 				const hasEquipment = filter.equipment.every(
-					(eq) => station.equipments.find((stationEq) => stationEq === eq) != null
+					(eq) => station.equipments?.find((stationEq) => stationEq === eq) != null
 				);
 
 				return isInDistance && isInAgeRange && meetsWheelchairFilter && hasEquipment;
