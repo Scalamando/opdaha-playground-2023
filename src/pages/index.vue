@@ -14,9 +14,7 @@ import { useAsyncState } from "@vueuse/core";
 
 import FilterOverlay from "../components/Map/FilterOverlay.vue";
 
-
 addIcons(FaSearch);
-
 
 const Map = defineAsyncComponent(() => import("@/components/Map/index.vue"));
 const MapMarker = defineAsyncComponent(() => import("@/components/Map/Marker.vue"));
@@ -40,7 +38,10 @@ const mapStyle = import.meta.env.VITE_MAP_STYLE_URL ?? {
 	],
 };
 
-const { state: stations } = useAsyncState(useAllStations, [], { onSuccess: console.log, onError: console.log });
+const { state: stations } = useAsyncState(useAllStations, [], {
+	onSuccess: console.log,
+	onError: console.log,
+});
 
 const map = ref<Map>();
 function loadMap(loadedMap: Map) {
@@ -98,14 +99,13 @@ onDeactivated(() => (activated.value = false));
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
 	>
 		<h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1>
-		
 	</div>
 	<div
 		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
 	>
-	<FilterOverlay class="flex w-full"></FilterOverlay>
+		<FilterOverlay class="mx-auto"></FilterOverlay>
 	</div>
-	
+
 	<Suspense timeout="500">
 		<Map
 			class="absolute inset-0"
