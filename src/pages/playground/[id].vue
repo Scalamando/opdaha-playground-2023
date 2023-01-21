@@ -9,9 +9,6 @@ import { useOneStation } from "@/composables/useStations";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/vue";
 
-// picture carousel
-import "swiper/css";
-
 addIcons(FaChild);
 
 const route = useRoute();
@@ -29,10 +26,11 @@ const adress = "Ratzeburger Allee 92a";
 const busstation = "Kahlhorstraße";
 const pg_rating = 4;
 const alerts = [
-	{ type: "warning", content: "Die Schaukel ist kaputt" },
-	{ type: "message", content: "Wasserspiele von 10:00 bis 16:00" },
+	{ type: "warning", content: "Schaukel aktuell kaputt" },
+	{ type: "message", content: "Wasserspiele von 10:00-16:00" },
 ];
 
+let own_pg_rating = 0;
 const user_ratings = [
 	{ name: "Indrani Neufeld", rating: 5, message: "Bester Spielplatz" },
 	{ name: "Anonymous User", rating: 4, message: "Haha, toller Spielplatz" },
@@ -104,33 +102,53 @@ const images = [
 		</div>
 		<!-- messages/ additional info -->
 		<div class="flex py-4">
-			<div
-				v-for="alert in alerts"
-				class="text-cente m-2 flex w-full rounded-md border-2 border-solid p-2"
-				:class="{
-					'border-rose-400, text-rose-400': alert.type === 'warning',
-					'border-blue-400, text-blue-400': alert.type === 'message',
-				}"
-			>
-				<va-icon v-if="alert.type === 'warning'" name="warning" class="p-2" size="2rem" />
-				<p class="text-xl font-bold">{{ alert.content }}</p>
+			<div class="flex">
+				<va-card v-for="alert in alerts" class="row mx-4 w-1/2 !shadow-none" color="#ffffff">
+					<va-card-content class="mx-4 flex h-full items-center justify-center px-4">
+						<va-icon v-if="alert.type === 'warning'" name="error" class="pr-5 pl-2" />
+						<va-icon v-else name="info" class="pr-5 pl-2" />
+						{{ alert.content }}</va-card-content
+					>
+				</va-card>
 			</div>
 		</div>
+
 		<div class="flex py-4">
 			<div class="w-full">
-				<h4 class="va-h4">Umgebung</h4>
-				<va-chip v-for="item in surroundings" class="m-1" color="gray">{{ item }}</va-chip>
+				<h4 class="va-h6">Umgebung</h4>
+				<div class="grid grid-cols-3 text-center">
+					<va-card v-for="item in surroundings" class="py-4 mx-4 my-3 !shadow-none " color="#ffffff">
+						<va-icon name="info" class="py-4 px-2" />
+						<va-card-content class="py-4"> {{ item }}</va-card-content>
+					</va-card>
+				</div>
 			</div>
-			<va-divider vertical color="gray" class="mx-6 flex-none" />
+		</div>
+
+    <div class="flex py-4">
 			<div class="w-full">
-				<h4 class="va-h4">Barrierefreiheit</h4>
-				<va-chip color="gray">{{ wheelchair }}</va-chip>
+				<h4 class="va-h6">Barrierefreiheit</h4>
+				<div class="grid grid-cols-3 text-center">
+					<va-card class="py-4 mx-4 my-3 !shadow-none" color="#ffffff">
+						<va-icon name="info" class="py-4 px-2" />
+						<va-card-content class="py-4"> {{ wheelchair }}</va-card-content>
+					</va-card>
+				</div>
 			</div>
 		</div>
-		<div>
-			<h4 class="va-h4">Spielgeräte</h4>
-			<va-chip v-for="item in equipment" class="m-1" color="gray">{{ item }}</va-chip>
+
+    <div class="flex py-4">
+			<div class="w-full">
+				<h4 class="va-h6">Spielgeräte</h4>
+				<div class="grid grid-cols-3 text-center">
+					<va-card v-for="item in equipment" class="py-4 mx-4 my-3 !shadow-none " color="#ffffff">
+						<va-icon name="info" class="py-4 px-2" />
+						<va-card-content class="py-4"> {{ item }}</va-card-content>
+					</va-card>
+				</div>
+			</div>
 		</div>
+
 		<div>
 			<h4 class="va-h4">Standort</h4>
 			<div class="flex pb-4">
