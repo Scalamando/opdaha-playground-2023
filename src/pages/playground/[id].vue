@@ -182,7 +182,7 @@ const tranlsations = {
 							<p class="text-gray-500">{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
 						</div>
 					</div>
-					<va-rating :readonly="true" v-model="pg_rating" color="accent" class="py-4"></va-rating>
+					<va-rating :readonly="true" v-model="pg_rating" color="primary" class="py-4"></va-rating>
 				</div>
 				<va-button class="bg-primary h-12 flex-none" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">
 					<va-icon class="mr-2" name="location_on" color="#FFFFFF" />
