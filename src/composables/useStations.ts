@@ -1,6 +1,7 @@
+import type { UserRating } from "@/composables/useUserRating";
 import type { Filter } from "@/stores/filter";
+import { useGeoLocationStore } from "@/stores/geolocation";
 import distance from "@turf/distance";
-import { useGeolocation } from "@vueuse/core";
 import axios from "axios";
 
 export type Image = {
@@ -37,6 +38,7 @@ export type Station = {
 	extras: Extra[];
 	equipments: Equipment[];
 	images: Image[];
+	userRatings: UserRating[];
 };
 
 type StationResponse = {
@@ -52,7 +54,13 @@ type StationResponse = {
 		location: [number, number];
 		surroundings: Surrounding[];
 		extras: Extra[];
-		equipments: Equipment[];
+		equipment: Equipment[];
+		userratings: {
+			data: {
+				id: number;
+				attributes: UserRating;
+			}[];
+		};
 		images: {
 			data: {
 				id: number;
@@ -79,7 +87,14 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 		location: stationResponse.attributes.location,
 		surroundings: stationResponse.attributes.surroundings,
 		extras: stationResponse.attributes.extras,
-		equipments: stationResponse.attributes.equipments,
+		equipments: stationResponse.attributes.equipment,
+		userRatings:
+			stationResponse.attributes.userratings.data?.map((rating) => ({
+				id: rating.id,
+				rating: rating.attributes.rating,
+				title: rating.attributes.title,
+				content: rating.attributes.content,
+			})) ?? [],
 		images:
 			stationResponse.attributes.images.data?.map((img) => ({
 				url: import.meta.env.VITE_APP_API_URL + img.attributes.url,
@@ -101,24 +116,27 @@ export async function useAllStations({ filter }: { filter?: Filter }): Promise<S
 		let stations = response.data.data.map(transformStrapiStationResponse);
 
 		if (filter) {
-			const { coords } = useGeolocation({ enableHighAccuracy: true });
+			const geoStore = useGeoLocationStore();
+			console.log(geoStore.coords);
+
 			stations = stations.filter((station) => {
 				const isInDistance =
-					filter.distance[0] > 0
-						? distance(station.location, [coords.value.latitude, coords.value.longitude]) <
+					filter.distance[0] > 0 && geoStore.coords.latitude !== Infinity
+						? distance(station.location, [geoStore.coords.longitude, geoStore.coords.latitude]) <
 						  filter.distance[0]
 						: true;
 
 				const isInAgeRange =
 					(station.minAge ?? 0) <= filter.age[0] && (station.maxAge ?? 16) >= filter.age[1];
 
-				const hasWheelchair = station.wheelchair === filter.wheelchair;
+				const meetsWheelchairFilter =
+					filter.wheelchair === "no" ? true : station.wheelchair === filter.wheelchair;
 
 				const hasEquipment = filter.equipment.every(
-					(eq) => station.equipments.find((stationEq) => stationEq === eq) != null
+					(eq) => station.equipments?.find((stationEq) => stationEq === eq) != null
 				);
 
-				return isInDistance && isInAgeRange && hasWheelchair && hasEquipment;
+				return isInDistance && isInAgeRange && meetsWheelchairFilter && hasEquipment;
 			});
 		}
 

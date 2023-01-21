@@ -2,9 +2,10 @@
 import ChipMultiSelect from "@/components/ChipMultiSelect.vue";
 import { useFilterStore } from "@/stores/filter";
 import { defineComponent } from "vue";
+import { RouterLink } from "vue-router";
 
 export default defineComponent({
-	components: { ChipMultiSelect },
+	components: { ChipMultiSelect, RouterLink },
 	setup() {
 		const filterStore = useFilterStore();
 		return {
@@ -51,7 +52,9 @@ export default defineComponent({
 	<div class="w-full p-4">
 		<div class="flex items-center justify-between">
 			<h1 class="va-h1">Filter</h1>
-			<span class="text-right"><va-icon class="material-icons" size="large">cancel</va-icon></span>
+			<RouterLink class="text-right" to="/"
+				><va-icon class="material-icons" size="large">cancel</va-icon></RouterLink
+			>
 		</div>
 
 		<div class="mb-6">
@@ -130,6 +133,5 @@ export default defineComponent({
 		</div>
 
 		<va-divider />
-
 	</div>
 </template>
