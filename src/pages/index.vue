@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAllStations, type Station } from "@/composables/useStations";
+import { useAllStations, useStationByName, type Station } from "@/composables/useStations";
 import { addIcons } from "oh-vue-icons";
 import { FaSearch } from "oh-vue-icons/icons";
 import { defineAsyncComponent, onActivated, onDeactivated, ref, watch } from "vue";
@@ -16,6 +16,8 @@ import { useFilterStore } from "@/stores/filter";
 import FilterOverlay from "../components/Map/FilterOverlay.vue";
 
 addIcons(FaSearch);
+
+const value = "";
 
 const Map = defineAsyncComponent(() => import("@/components/Map/index.vue"));
 const MapMarker = defineAsyncComponent(() => import("@/components/Map/Marker.vue"));
@@ -95,18 +97,24 @@ onDeactivated(() => (focusedQueried.value = false));
 const activated = ref(true);
 onActivated(() => (activated.value = true));
 onDeactivated(() => (activated.value = false));
+
+const searchTerm = ref("");
+async function searchRequest() {
+	stations.value = await useStationByName(searchTerm.value);
+}
 </script>
 
 <template>
 	<div
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
 	>
-		<h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1>
-	</div>
-	<div
-		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
-	>
-		<FilterOverlay class="mx-auto"></FilterOverlay>
+		<!-- <h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1> -->
+
+		<va-input class="mb-4" v-model="searchTerm" placeholder="Suche" @keyup="searchRequest">
+			<template #prependInner>
+				<va-icon name="search" />
+			</template>
+		</va-input>
 	</div>
 
 	<Suspense timeout="500">
@@ -133,7 +141,10 @@ onDeactivated(() => (activated.value = false));
 						}"
 						@click.stop="() => focusStation(station)"
 					>
-						<img v-if="station.images.length !== 0" :src="station.images[0].url" alt="" />
+						<img v-if="station.equipments.length <= 2 && !station.equipments.includes('water') " src="/src/assets/icons/klein.png" alt="" />
+						<img v-if="station.equipments.length > 2 && !station.equipments.includes('water')" src="/src/assets/icons/gross.png" alt="" />
+						<img v-if="station.equipments.includes('water')" src="/src/assets/icons/wasser_bunt.png" alt="" />
+					
 					</button>
 				</div>
 			</MapMarker>
@@ -152,6 +163,11 @@ onDeactivated(() => (activated.value = false));
 			class="absolute inset-x-2 bottom-2 z-40"
 		/>
 	</Transition>
+	<div
+		class="group absolute inset-x-0 bottom-0 z-10 bg-gradient-to-b from-transparent to-black/60 p-4 pb-8"
+	>
+		<FilterOverlay class="mx-auto"></FilterOverlay>
+	</div>
 </template>
 
 <style scoped>
@@ -173,7 +189,7 @@ onDeactivated(() => (activated.value = false));
 <style>
 .mapboxgl-ctrl-top-right .mapboxgl-ctrl,
 .maplibregl-ctrl-top-right .maplibregl-ctrl {
-	margin: 1rem 1rem 0 0 !important;
+	margin: 1.5rem 1.5rem 0 0 !important;
 }
 
 .mapboxgl-ctrl-attrib.mapboxgl-compact,

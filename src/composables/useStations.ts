@@ -157,3 +157,13 @@ export async function useOneStation(id: number): Promise<Station | null> {
 
 	return null;
 }
+
+export async function useStationByName(name: string) {
+	const response = await axios.get<{data: StationResponse[] }>(
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?&populate=*&filters[name][$containsi]="+ name 
+	);
+	if (response.status === 200) {
+		return  response.data.data.map(transformStrapiStationResponse);
+	}
+	return [];
+}
