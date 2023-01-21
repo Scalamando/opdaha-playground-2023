@@ -42,8 +42,7 @@
   />
 
   <p>rating</p>
-  <va-rating v-model="rating" 
-  icon="star"/>
+  <va-rating v-model="rating"/>
 
   <p></p>
 </template>
