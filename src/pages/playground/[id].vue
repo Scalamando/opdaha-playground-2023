@@ -2,6 +2,9 @@
 import { addIcons, OhVueIcon } from "oh-vue-icons";
 import { FaChild } from "oh-vue-icons/icons";
 import { useRoute } from "vue-router";
+import { useGeolocation } from "@vueuse/core";
+import { computed, watch} from "vue";
+import distance from "@turf/distance";
 
 import { useAsyncState } from "@vueuse/core";
 
@@ -16,21 +19,28 @@ addIcons(FaChild);
 
 const route = useRoute();
 
-const { state: station } = useAsyncState(() => useOneStation(Number(route.params.id)), null);
+const { state: station, execute } = useAsyncState(() => useOneStation(Number(route.params.id)), null);
 
-//seperate data
+function openLocationInMaps({lat , lng }: {lat : number, lng : number}){
+  
+  window.open( 'https://google.com/maps/dir/?api=1&destination=' + lat +',' + lng , '_blank', 'noreferrer')
+}
 
-// mock data
-const name = "Ratzeburger";
-const distance = "500";
-const ageRange = "2-12";
+//callculate distance to playground
+const { coords } = useGeolocation();
+const curDistance = computed(() =>
+	coords.value && station.value ? distance([coords.value.longitude, coords.value.latitude], [Number(station.value.location[0]), Number(station.value.location[1])]) : 0
+);
 
-const surroundings = ["Cafe", "Supermarkt", "Parkplatz"];
-const wheelchair = "limited";
-const equipment = ["Rutsche", "Schaukel", "Wippe", "Klettergerüst", "Sandkasten", "Varjo XR-3"];
+//const pg_rating = 4; // todo
+const pg_rating = computed(() => station.value?.userRatings.length ? station.value.userRatings.reduce((sum,rating) => sum + rating.rating, 0)/station.value.userRatings.length : 0)
+watch(pg_rating, console.log);
+
+
+
+// mock
 const adress = "Ratzeburger Allee 92a";
 const busstation = "Kahlhorstraße";
-const pg_rating = 4;
 const alerts = [
 	{ type: "warning", content: "Schaukel aktuell kaputt" },
 	{ type: "message", content: "Wasserspiele von 10:00-16:00" },
@@ -38,21 +48,10 @@ const alerts = [
 
 let own_pg_rating = 0;
 const user_ratings = [
-	{ name: "Indrani Neufeld", rating: 5, message: "Bester Spielplatz" },
-	{ name: "Anonymous User", rating: 4, message: "Haha, toller Spielplatz" },
+	{ name: "Indrani Neufeld", rating: 5, content: "Bester Spielplatz" },
+	{ name: "Anonymous User", rating: 4, content: "Haha, toller Spielplatz" },
 ];
-const images_mock = [
-	{
-		url: "https://picsum.photos/600/400",
-		width: 600,
-		height: 400,
-	},
-	{
-		url: "https://picsum.photos/500/350",
-		width: 500,
-		height: 350,
-	},
-];
+
 </script>
 
 <template>
@@ -90,20 +89,20 @@ const images_mock = [
 			<div class="flex items-center">
 				<div>
 					<!-- name, distance and age -->
-					<h2 class="va-h2">{{ name }}</h2>
+					<h4 class="va-h4">{{ station.name }}</h4>
 					<div class="flex">
 						<div class="flex flex-none pr-4">
 							<va-icon class="flex-none" name="location_on" color="gray" />
-							<p class="text-gray-500">{{ distance }}m</p>
+							<p class="text-gray-500">{{ curDistance.toFixed(2) }} km</p>
 						</div>
 						<div class="flex">
 							<OhVueIcon name="fa-child" color="gray" class="flex-none"></OhVueIcon>
-							<p class="text-gray-500">{{ ageRange }} Jahre</p>
+							<p class="text-gray-500">{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
 						</div>
 					</div>
 					<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
 				</div>
-				<va-button class="bg-primary h-12 flex-none">
+				<va-button class="bg-primary h-12 flex-none" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">
 					<va-icon class="mr-2" name="location_on" color="#FFFFFF" />
 				</va-button>
 			</div>
@@ -125,7 +124,7 @@ const images_mock = [
 					<h4 class="va-h6">Umgebung</h4>
 					<div class="grid grid-cols-3 text-center">
 						<va-card
-							v-for="item in surroundings"
+							v-for="item in station.surroundings"
 							class="mx-4 my-3 py-4 !shadow-none"
 							color="accent"
 						>
@@ -142,7 +141,7 @@ const images_mock = [
 					<div class="grid grid-cols-3 text-center">
 						<va-card class="mx-4 my-3 py-4 !shadow-none" color="accent">
 							<va-icon name="info" class="py-4 px-2" />
-							<va-card-content class="py-4"> {{ wheelchair }}</va-card-content>
+							<va-card-content class="py-4"> {{ station.wheelchair }}</va-card-content>
 						</va-card>
 					</div>
 				</div>
@@ -152,7 +151,7 @@ const images_mock = [
 				<div class="w-full">
 					<h4 class="va-h6">Spielgeräte</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card v-for="item in equipment" class="mx-4 my-3 py-4 !shadow-none" color="accent">
+						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="accent">
 							<va-icon name="info" class="py-4 px-2" />
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
 						</va-card>
@@ -168,23 +167,26 @@ const images_mock = [
 					<va-icon name="directions_bus" class="mr-2 flex-none" />
 					<p>{{ busstation }}</p>
 				</div>
-				<va-button class="w-full">Route in Maps öffnen</va-button>
+				<va-button class="w-full" @click="openLocationInMaps({lat: station!.location[1], lng: station!.location[0]})">Route in Maps öffnen</va-button>
 			</div>
 			<div>
 				<h4 class="va-h4">Bewertung</h4>
 				<div class="flex py-4">
-					<CreateRating />
+					<CreateRating :station_id="station.id" @newRating="execute()"/>
 				</div>
 				<!-- user ratings -->
 				<h5 class="va-h5">Bewertung anderer Nutzenden</h5>
-				<div v-for="user in user_ratings" class="flex items-center pl-6 pt-4">
+				<div v-if="station.userRatings.length" v-for="userRating in station.userRatings" class="flex items-center pl-6 pt-4">
 					<va-icon name="account_circle" size="4rem" class="flex-none pr-4" />
 					<div>
-						<h6 class="va-h6">{{ user.name }}</h6>
-						<va-rating :readonly="true" v-model="user.rating" color="primary" />
-						<p>{{ user.message }}</p>
+						<h6 class="va-h6">{{ userRating.title }}</h6>
+						<va-rating :readonly="true" v-model="userRating.rating" color="primary" />
+						<p>{{ userRating.content }}</p>
 					</div>
 				</div>
+        <div v-else>
+          <p> Es sind noch keine Bewertungen vorhanden. Sei die erste Person.</p>
+        </div>
 			</div>
 			<va-button class="mt-8 flex w-full justify-center">
 				<div class="w-full">
