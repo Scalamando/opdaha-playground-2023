@@ -89,8 +89,8 @@ function transformStrapiStationResponse(stationResponse: StationResponse): Stati
 }
 
 export async function useAllStations(): Promise<Station[]> {
-	const response = await axios.get(
-		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?pagination[pageSize]=350&populate=*"
+	const response = await axios.get<{ data: StationResponse[] }>(
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?pagination[start]=0&pagination[limit]=350&populate=*"
 	);
 
 	if (response.status === 200) {
@@ -101,7 +101,7 @@ export async function useAllStations(): Promise<Station[]> {
 }
 
 export async function useOneStation(id: number): Promise<Station | null> {
-	const response = await axios.get(
+	const response = await axios.get<{ data: StationResponse }>(
 		import.meta.env.VITE_APP_API_URL + "/api/playground/" + id + "?populate=*"
 	);
 
