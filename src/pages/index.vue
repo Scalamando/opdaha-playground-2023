@@ -12,6 +12,7 @@ import MapPopup from "../components/Map/Popup.vue";
 
 import { useAsyncState } from "@vueuse/core";
 
+import { useFilterStore } from "@/stores/filter";
 import FilterOverlay from "../components/Map/FilterOverlay.vue";
 
 addIcons(FaSearch);
@@ -38,7 +39,9 @@ const mapStyle = import.meta.env.VITE_MAP_STYLE_URL ?? {
 	],
 };
 
-const { state: stations } = useAsyncState(useAllStations, [], {
+const filterStore = useFilterStore();
+
+const { state: stations } = useAsyncState(() => useAllStations({ filter: filterStore.state }), [], {
 	onSuccess: console.log,
 	onError: console.log,
 });
