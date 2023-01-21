@@ -38,12 +38,15 @@ export async function useStationUserRating(stationId: number) {
 	return [];
 }
 
-export async function sendUserRating(rating: number, title: string, content: string) {
+export async function sendUserRating(id: number, rating: number, title: string, content: string) {
 	const response = await axios.post(import.meta.env.VITE_APP_API_URL + "/api/userratings", {
 		data: {
 			rating,
 			title,
 			content,
+			playground: {
+				connect : [id],
+			}
 		},
 	});
 
