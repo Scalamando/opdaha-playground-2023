@@ -1,6 +1,6 @@
 import type { Filter } from "@/stores/filter";
+import { useGeoLocationStore } from "@/stores/geolocation";
 import distance from "@turf/distance";
-import { useGeolocation } from "@vueuse/core";
 import axios from "axios";
 
 export type Image = {
@@ -101,24 +101,27 @@ export async function useAllStations({ filter }: { filter?: Filter }): Promise<S
 		let stations = response.data.data.map(transformStrapiStationResponse);
 
 		if (filter) {
-			const { coords } = useGeolocation({ enableHighAccuracy: true });
+			const geoStore = useGeoLocationStore();
+			console.log(geoStore.coords);
+
 			stations = stations.filter((station) => {
 				const isInDistance =
-					filter.distance[0] > 0
-						? distance(station.location, [coords.value.latitude, coords.value.longitude]) <
+					filter.distance[0] > 0 && geoStore.coords.latitude !== Infinity
+						? distance(station.location, [geoStore.coords.longitude, geoStore.coords.latitude]) <
 						  filter.distance[0]
 						: true;
 
 				const isInAgeRange =
 					(station.minAge ?? 0) <= filter.age[0] && (station.maxAge ?? 16) >= filter.age[1];
 
-				const hasWheelchair = station.wheelchair === filter.wheelchair;
+				const meetsWheelchairFilter =
+					filter.wheelchair === "no" ? true : station.wheelchair === filter.wheelchair;
 
 				const hasEquipment = filter.equipment.every(
 					(eq) => station.equipments.find((stationEq) => stationEq === eq) != null
 				);
 
-				return isInDistance && isInAgeRange && hasWheelchair && hasEquipment;
+				return isInDistance && isInAgeRange && meetsWheelchairFilter && hasEquipment;
 			});
 		}
 
