@@ -93,11 +93,11 @@ const user_ratings = [
 					<div class="flex">
 						<div class="flex flex-none pr-4">
 							<va-icon class="flex-none" name="location_on" color="gray" />
-							<p>{{ curDistance.toFixed(2) }} km</p>
+							<p class="text-gray-500">{{ curDistance.toFixed(2) }} km</p>
 						</div>
 						<div class="flex">
 							<OhVueIcon name="fa-child" color="gray" class="flex-none"></OhVueIcon>
-							<p>{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
+							<p class="text-gray-500">{{ station.minAge }} - {{ station.maxAge }}Jahre</p>
 						</div>
 					</div>
 					<va-rating :readonly="true" v-model="pg_rating" color="gold" class="py-4"></va-rating>
@@ -109,7 +109,7 @@ const user_ratings = [
 			<!-- messages/ additional info -->
 			<div class="flex py-4">
 				<div class="flex">
-					<va-card v-for="alert in alerts" class="row mx-4 w-1/2 !shadow-none" color="#ffffff">
+					<va-card v-for="alert in alerts" class="row mx-4 w-1/2 !shadow-none" color="accent">
 						<va-card-content class="mx-4 flex h-full items-center justify-center px-4">
 							<va-icon v-if="alert.type === 'warning'" name="error" class="pr-5 pl-2" />
 							<va-icon v-else name="info" class="pr-5 pl-2" />
@@ -126,7 +126,7 @@ const user_ratings = [
 						<va-card
 							v-for="item in station.surroundings"
 							class="mx-4 my-3 py-4 !shadow-none"
-							color="#ffffff"
+							color="accent"
 						>
 							<va-icon name="info" class="py-4 px-2" />
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
@@ -139,7 +139,7 @@ const user_ratings = [
 				<div class="w-full">
 					<h4 class="va-h6">Barrierefreiheit</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
+						<va-card class="mx-4 my-3 py-4 !shadow-none" color="accent">
 							<va-icon name="info" class="py-4 px-2" />
 							<va-card-content class="py-4"> {{ station.wheelchair }}</va-card-content>
 						</va-card>
@@ -151,7 +151,7 @@ const user_ratings = [
 				<div class="w-full">
 					<h4 class="va-h6">Spielgeräte</h4>
 					<div class="grid grid-cols-3 text-center">
-						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="#ffffff">
+						<va-card v-for="item in station.equipments" class="mx-4 my-3 py-4 !shadow-none" color="accent">
 							<va-icon name="info" class="py-4 px-2" />
 							<va-card-content class="py-4"> {{ item }}</va-card-content>
 						</va-card>
@@ -180,7 +180,7 @@ const user_ratings = [
 					<va-icon name="account_circle" size="4rem" class="flex-none pr-4" />
 					<div>
 						<h6 class="va-h6">{{ userRating.title }}</h6>
-						<va-rating :readonly="true" v-model="userRating.rating" color="gold" />
+						<va-rating :readonly="true" v-model="userRating.rating" color="primary" />
 						<p>{{ userRating.content }}</p>
 					</div>
 				</div>

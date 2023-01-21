@@ -53,7 +53,7 @@ export default defineComponent({
 		<div class="flex items-center justify-between">
 			<h1 class="va-h1">Filter</h1>
 			<RouterLink class="text-right" to="/"
-				><va-icon class="material-icons" size="large">cancel</va-icon></RouterLink
+				><va-icon class="material-icons" size="large">close</va-icon></RouterLink
 			>
 		</div>
 
@@ -71,7 +71,7 @@ export default defineComponent({
 			</div>
 
 			<va-slider
-				class="mb-4"
+				class="mx-6 mb-4"
 				v-model="filterStore.state.distance[0]"
 				track-label-visible
 				:max="15"
@@ -89,7 +89,7 @@ export default defineComponent({
 			</div>
 
 			<va-slider
-				class="mb-4"
+				class="mx-6 mb-4"
 				v-model="filterStore.state.age"
 				range
 				track-label-visible
@@ -131,7 +131,12 @@ export default defineComponent({
 				:options="options.wheelchair"
 			/>
 		</div>
-
 		<va-divider />
+		<div class="flex items-end py-6">
+			<va-button preset="secondary" class="mr-4" @click="filterStore.resetFilter()"
+				>Zurücksetzen</va-button
+			>
+			<va-button class="mr-4" to="/">Speichern</va-button>
+		</div>
 	</div>
 </template>

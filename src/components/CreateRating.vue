@@ -28,7 +28,7 @@ async function post_rating(){
     <div class="flex flex-col">
         <div class="flex flex-col">
             <h6 class="mb-4 text-base font-semibold">Bewertung erstellen</h6>
-            <va-rating v-model="own_pg_rating" :readonly="false" color="gold" :size="40"/>
+            <va-rating v-model="own_pg_rating" :readonly="false"  color="primary" :size="40"/>
         </div>
         <!-- open when star is set -->
         <div v-if=" own_pg_rating != 0" class="w-full py-4">

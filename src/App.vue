@@ -32,6 +32,6 @@ body,
 	min-height: calc(var(--vh,1vh)*100) !important;
 	height: 100%;
 	width: 100%;
-	@apply bg-slate-100;
+	background-color: #FFFFFF;
 };
 </style>
