@@ -20,7 +20,7 @@ app.use(createVuestic({
                 gray: '#767C88',
                 gold: '#FDCC0D',
                 accent: '#E6ECE7',
-                danger: '#FF7A7A'
+                danger: '#FF7A7A',
             }
         }
     }

@@ -109,12 +109,13 @@ async function searchRequest() {
 		class="group absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-4 pb-8"
 	>
 		<!-- <h1 class="mb-4 text-4xl font-semibold leading-none text-white drop-shadow-xl">Spielplätze</h1> -->
-
-		<va-input class="mb-4" v-model="searchTerm" placeholder="Suche" @keyup="searchRequest">
+		<div class="flex mt-4 w-80">
+		<va-input class="mb-4 mx-auto" v-model="searchTerm" placeholder="Suche" @keyup="searchRequest">
 			<template #prependInner>
 				<va-icon name="search" />
 			</template>
 		</va-input>
+		</div>
 	</div>
 
 	<Suspense timeout="500">
