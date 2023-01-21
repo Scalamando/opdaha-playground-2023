@@ -141,7 +141,10 @@ async function searchRequest() {
 						}"
 						@click.stop="() => focusStation(station)"
 					>
-						<img v-if="station.images.length !== 0" :src="station.images[0].url" alt="" />
+						<img v-if="station.equipments.length <= 2 && !station.equipments.includes('water') " src="/src/assets/icons/klein.png" alt="" />
+						<img v-if="station.equipments.length > 2 && !station.equipments.includes('water')" src="/src/assets/icons/gross.png" alt="" />
+						<img v-if="station.equipments.includes('water')" src="/src/assets/icons/wasser_bunt.png" alt="" />
+					
 					</button>
 				</div>
 			</MapMarker>
