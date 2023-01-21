@@ -68,8 +68,7 @@ const onLeave = (el: Element) => {
 		</div>
 		<Transition name="expand" @enter="onEnter" @after-enter="afterEnter" @leave="onLeave">
 			<div class="w-full" v-if="open">
-				<img v-if="props.image" :src="props.image.url" alt="" class="rounded-lg px-4 pb-5 pt-4 h-56 object-cover w-full" />
-			</div>
+			<img :src="props.image?.url ?? 'https://picsum.photos/500/300'" alt="" class="rounded-lg px-4 pb-5 pt-4 h-56 object-cover w-full" /></div>
 		</Transition>
 
 		<RouterLink
