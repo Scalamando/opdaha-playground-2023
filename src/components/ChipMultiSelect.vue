@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-
 type Props = {
 	modelValue: string[];
 	options: { value: string; label: string }[];
@@ -11,38 +9,26 @@ type Emits = {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const selected = ref<{ [key: string]: boolean }>(
-	props.options.reduce(
-		(all, opt) => ({ ...all, [opt.value]: props.modelValue.indexOf(opt.value) !== -1 }),
-		{}
-	)
-);
+function update(key: string) {
+	const exists = props.modelValue.find((val) => val === key);
 
-watch(() => props.modelValue, (newValue) => {
-	selected.value = props.options.reduce(
-		(all, opt) => ({ ...all, [opt.value]: props.modelValue.indexOf(opt.value) !== -1 }),
-		{}
-	)
-})
-
-watch(
-	selected,
-	(newSelected) => {
-		const selectedArr = Object.entries(newSelected)
-			.filter(([_, value]) => value)
-			.map(([key]) => key);
-		emit("update:modelValue", selectedArr);
-	},
-	{ deep: true }
-);
+	if (exists) {
+		emit(
+			"update:modelValue",
+			props.modelValue.filter((val) => val === key)
+		);
+	} else {
+		emit("update:modelValue", props.modelValue.concat(key));
+	}
+}
 </script>
 
 <template>
 	<va-chip
 		v-for="option in props.options"
 		:key="option.value"
-		@click="() => (selected[option.value] = !selected[option.value])"
-		:outline="!selected[option.value]"
+		@click="update(option.value)"
+		:outline="!props.modelValue.find((val) => val === option.value)"
 		class="m-1"
 	>
 		{{ option.label }}

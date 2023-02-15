@@ -43,10 +43,7 @@ const mapStyle = import.meta.env.VITE_MAP_STYLE_URL ?? {
 
 const filterStore = useFilterStore();
 
-const { state: stations } = useAsyncState(() => useAllStations({ filter: filterStore.state }), [], {
-	onSuccess: console.log,
-	onError: console.log,
-});
+const { state: stations } = useAsyncState(() => useAllStations({ filter: filterStore.state }), []);
 
 const map = ref<Map>();
 function loadMap(loadedMap: Map) {
@@ -145,7 +142,7 @@ async function searchRequest() {
 						<img v-if="station.equipments.length <= 2 && !station.equipments.includes('water') " src="/src/assets/icons/klein.png" alt="" />
 						<img v-if="station.equipments.length > 2 && !station.equipments.includes('water')" src="/src/assets/icons/gross.png" alt="" />
 						<img v-if="station.equipments.includes('water')" src="/src/assets/icons/wasser_bunt.png" alt="" />
-					
+
 					</button>
 				</div>
 			</MapMarker>

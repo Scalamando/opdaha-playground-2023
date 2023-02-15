@@ -117,7 +117,6 @@ export async function useAllStations({ filter }: { filter?: Filter }): Promise<S
 
 		if (filter) {
 			const geoStore = useGeoLocationStore();
-			console.log(geoStore.coords);
 
 			stations = stations.filter((station) => {
 				const isInDistance =
@@ -160,7 +159,7 @@ export async function useOneStation(id: number): Promise<Station | null> {
 
 export async function useStationByName(name: string) {
 	const response = await axios.get<{data: StationResponse[] }>(
-		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?&populate=*&filters[name][$containsi]="+ name 
+		import.meta.env.VITE_APP_API_URL + "/api/playgrounds?&populate=*&filters[name][$containsi]="+ name
 	);
 	if (response.status === 200) {
 		return  response.data.data.map(transformStrapiStationResponse);
