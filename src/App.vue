@@ -25,7 +25,8 @@ window.addEventListener("resize", setViewportHeight, { passive: true });
 html,
 body,
 #app {
-	height: calc(var(--vh, 1vh) * 100) !important;
+	min-height: calc(var(--vh, 1vh) * 100) !important;
+	height: 100%;
 	width: 100%;
 	background-color: #ffffff;
 }
