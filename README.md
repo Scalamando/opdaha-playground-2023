@@ -11,11 +11,11 @@ This repo contains the Platzsy app, which was develop as part of the Open Data H
 
 ## Project Setup
 
-This project consists of two parts: the web app in this repo and a StrapiCMS instance that serves as the backend.
+This project consists of two parts: the web app in this repo and a Strapi instance that serves as the backend.
 
-### StrapiCMS
+### Strapi
 
-For the StrapiCMS setup refer to the `opdata-platzsy-dataset` repo.
+For the Strapi setup refer to the `opdaha-platzsy-backend` repo.
 
 ### Web app
 
