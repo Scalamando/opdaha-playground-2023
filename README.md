@@ -1,40 +1,42 @@
-# opdaha-playground-2023
+# Platzsy - OpDaHa 2023
 
-This template should help get you started developing with Vue 3 in Vite.
+![screenshots of the Platzsy app](docs/App-Screenshots.png)
 
-## Recommended IDE Setup
+This repo contains the Platzsy app, which was develop as part of the Open Data Hackathon 2023 at the University of Lübeck. Finding the right playground for your children and you can be a challenging task. Platzsy supports you in your search by providing you with the information you need in order to make a decision. This includes
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- a map of all local playgrounds
+- a filter for your personal criteria
+- a detailed view of the playtoys and surrounding activities
+- a review section to hear about the experiences of others
 
 ## Project Setup
 
+This project consists of two parts: the web app in this repo and a StrapiCMS instance that serves as the backend.
+
+### StrapiCMS
+
+For the StrapiCMS setup refer to the `opdata-platzsy-dataset` repo.
+
+### Web app
+
+Make a copy of the `.env.example` file and name it `.env.local`. Replace the contained environment variables with their actual values. `VITE_APP_API_URL` should point to your strapi instance (`http://localhost:1337` for local dev). For the `VITE_MAP_STYLE_URL` you will need to create an account at https://www.maptiler.com/. After all variables are set, continue:
+
 ```sh
+# Install all dependencies
 npm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
+# Start the development server
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Now you should be able to open the app at http://localhost:5173.
+
+#### Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
 ```
+
+## Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
